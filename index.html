@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For My Pooja ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { 
+    height: 100vh; width: 100vw; overflow: hidden; background: #000; 
+    font-family: 'Montserrat', sans-serif; color: #fff; 
+    display: flex; justify-content: center; align-items: center; 
+  }
+
+  /* --- HACKER INTRO --- */
+  #hacker-screen { 
+    position: fixed; inset: 0; background: #000; z-index: 10000; 
+    padding: 30px; font-family: 'Courier New', monospace; color: #0f0; 
+    display: flex; flex-direction: column; justify-content: flex-start;
+    line-height: 1.5; cursor: pointer;
+  }
+  .tap-instruction {
+    position: absolute; bottom: 50px; width: 100%; text-align: center;
+    color: #0f0; animation: blink 1s infinite; font-size: 1.2rem;
+  }
+
+  /* --- ANIMATED BACKGROUND --- */
+  .bg-elements { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+  
+  .floating-name {
+    position: absolute; font-family: 'Great Vibes'; font-size: 3rem; 
+    color: rgba(255, 105, 180, 0.3);
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5); 
+    animation: drift 25s infinite linear;
+    opacity: 0.6;
+  }
+
+  .balloon {
+    position: absolute; bottom: -150px; width: 85px; height: 110px; 
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; font-weight: bold; color: #fff;
+    box-shadow: inset 0 0 15px rgba(255,255,255,0.5), 0 0 20px var(--glow-color);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    animation: rise 15s infinite ease-in;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(2px);
+  }
+
+  .balloon span { text-shadow: 0 0 5px #fff; letter-spacing: 1px; z-index: 2; }
+  .balloon::after { 
+    content: ''; position: absolute; bottom: -25px; width: 2px; height: 25px; 
+    background: rgba(255, 255, 255, 0.5); 
+  }
+
+  @keyframes drift { 0% { transform: translate(0, 0) rotate(0deg); } 100% { transform: translate(50px, -100px) rotate(360deg); } }
+  @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-120vh); opacity: 0; } }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* --- GLASS CARD --- */
+  .glass-card { 
+    position: relative; z-index: 100; 
+    background: rgba(20, 0, 10, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 105, 180, 0.5); border-radius: 25px; 
+    padding: 30px 20px; width: 90%; max-width: 400px; 
+    text-align: center; display: none; overflow: hidden;
+    box-shadow: 0 0 60px rgba(255, 20, 147, 0.4); 
+  }
+  .glass-card.visible { display: block; animation: fadeIn 1s; }
+  
+  h1, h2 { font-family: 'Great Vibes', cursive; color: #ff69b4; margin-bottom: 10px; }
+  h1 { font-size: 3.2rem; line-height: 1.1; } 
+  h2 { font-size: 2.2rem; }
+  p { font-size: 1rem; margin-bottom: 20px; line-height: 1.5; color: #eee; }
+
+  .quote-box { 
+    width: 100%; min-height: 130px; margin: 15px auto; 
+    background: rgba(255, 105, 180, 0.1); border: 1px dashed #ff69b4; 
+    border-radius: 15px; display: flex; align-items: center; justify-content: center; 
+    padding: 15px; font-style: italic; color: #ffb6c1; font-size: 1.1rem; 
+  }
+
+  /* --- BUTTONS --- */
+  .btn { 
+    background: linear-gradient(45deg, #ff1493, #ff69b4); color: #fff; 
+    border: none; padding: 14px 30px; border-radius: 50px; 
+    font-weight: 900; font-size: 1rem; cursor: pointer; 
+    box-shadow: 0 5px 20px rgba(255, 20, 147, 0.5); transition: 0.3s;
+    margin-top: 10px;
+  }
+  .btn:active { transform: scale(0.95); }
+  
+  .btn-no { 
+    background: #555; position: absolute; 
+    transition: top 0.3s, left 0.3s; 
+    z-index: 1000; box-shadow: none;
+  }
+
+  /* --- SLIDES --- */
+  .slide { display: none; flex-direction: column; align-items: center; width: 100%; }
+  .slide.active { display: flex; animation: slideIn 0.5s; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* --- CAKE FLAMES --- */
+  .flame { 
+    width: 20px; height: 30px; background: radial-gradient(orange, red); 
+    border-radius: 50% 50% 20% 20%; animation: flick 0.1s infinite alternate; cursor: pointer; 
+    box-shadow: 0 0 20px orange;
+  }
+  @keyframes flick { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0.9; } }
+  .flame.out { opacity: 0; transition: 0.5s; }
+
+  /* --- FINAL TEXT --- */
+  #final-text { 
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); 
+    z-index: 1001; font-family: 'Great Vibes'; font-size: 3.5rem; 
+    color: #ffd700; text-align: center; text-shadow: 0 0 20px #ff69b4; 
+    width: 100%; transition: 1s; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+</audio>
+
+<div id="hacker-screen" onclick="startExperience()">
+  <div id="console"></div>
+  <div class="tap-instruction">>> TAP SCREEN TO ACCESS <<</div>
+</div>
+
+<div class="bg-elements" id="bg-elements"></div>
+
+<div id="final-text">Happy Birthday Pooja ❤️<br><span style="font-size: 1.5rem; font-family: 'Montserrat'; color: #fff;">Always Better Together</span></div>
+
+<div class="glass-card" id="mainCard">
+  
+  <div class="slide active" id="s_0">
+    <h1>Hey Beautiful...</h1>
+    <p>I hacked the system to find 10 reasons why you are the most special person in my life.</p>
+    <button class="btn" onclick="next(1)">REVEAL THEM ✨</button>
+  </div>
+
+  <div class="slide" id="s_1"><h2>1. Your Strength</h2><div class="quote-box">"You are your father's pride. The way you carry his values makes you a Queen."</div><button class="btn" onclick="next(2)">NEXT ❤️</button></div>
+  <div class="slide" id="s_2"><h2>2. Your Heart</h2><div class="quote-box">"The bond you share with your sister is my favorite story. Pure and unbreakable."</div><button class="btn" onclick="next(3)">NEXT ❤️</button></div>
+  <div class="slide" id="s_3"><h2>3. Your Smile</h2><div class="quote-box">"Your smile is my favorite shortcut to happiness. It lights up my whole world."</div><button class="btn" onclick="next(4)">NEXT ❤️</button></div>
+  <div class="slide" id="s_4"><h2>4. Your Kindness</h2><div class="quote-box">"The way you care for everyone around you shows how gold your soul is."</div><button class="btn" onclick="next(5)">NEXT ❤️</button></div>
+  <div class="slide" id="s_5"><h2>5. Your Grace</h2><div class="quote-box">"You have a style and class that no one else can touch. Truly one of a kind."</div><button class="btn" onclick="next(6)">NEXT ❤️</button></div>
+  <div class="slide" id="s_6"><h2>6. Your Vibe</h2><div class="quote-box">"Just being near you is my peace. You make everything feel calm and right."</div><button class="btn" onclick="next(7)">NEXT ❤️</button></div>
+  <div class="slide" id="s_7"><h2>7. Your Mind</h2><div class="quote-box">"You are as smart as you are beautiful. I admire the woman you are becoming."</div><button class="btn" onclick="next(8)">NEXT ❤️</button></div>
+  <div class="slide" id="s_8"><h2>8. Our Journey</h2><div class="quote-box">"Every second with you feels like a beautiful dream I never want to wake up from."</div><button class="btn" onclick="next(9)">NEXT ❤️</button></div>
+  <div class="slide" id="s_9"><h2>9. Your Fire</h2><div class="quote-box">"You are strong, unstoppable, and brave. Never let the world dull your sparkle."</div><button class="btn" onclick="next(10)">NEXT ❤️</button></div>
+  <div class="slide" id="s_10"><h2>10. Simply You</h2><div class="quote-box">"Out of 8 billion people, my heart chose you. You are enough. You are perfect."</div><button class="btn" onclick="next('cake')">FINAL SURPRISE 🎂</button></div>
+
+  <div class="slide" id="s_cake">
+    <div id="cake-ui">
+      <h2>Make a Wish!</h2>
+      <p>Blow out the candles (Tap them!)</p>
+      <div style="position:relative; width:150px; margin:20px auto; background:#442233; height:80px; border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:3rem; border-top: 5px solid #ff69b4;">
+        🎂
+        <div style="position:absolute; top:-30px; width:100%; display:flex; justify-content:center; gap:20px;">
+          <div class="flame" onclick="extinguish(this)"></div>
+          <div class="flame" onclick="extinguish(this)"></div>
+        </div>
+      </div>
+    </div>
+    <div id="final-reveal" style="display:none;">
+      <h2 style="animation: bounce 1s infinite;">YAY! 🎉</h2>
+      <button class="btn" onclick="next('propose')">ONE LAST THING... ✨</button>
+    </div>
+  </div>
+
+  <div class="slide" id="s_propose">
+    <h1>Pooja...</h1>
+    <p style="font-size: 1.4rem; color: #fff;"><b>Wanna be mine forever?</b></p>
+    
+    <div style="position: relative; width: 100%; height: 120px; display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+      <button class="btn" onclick="accept()" style="z-index: 50;">YES! ❤️</button>
+      <button class="btn btn-no" id="noBtn" onmouseover="moveNo()" ontouchstart="moveNo()">No</button>
+    </div>
+  </div>
+
+  <div class="slide" id="s_accepted">
+    <h1>I Knew It! ❤️</h1>
+    <div class="quote-box" style="border-color: #ffd700; color: #fff;">
+      IF U REALLY LIKED SUPRISE...<br><br>
+      <b>AKK VOICE NOTE BEJO BBE! 🥺</b>
+    </div>
+    <button class="btn" onclick="finish()">THE END ✨</button>
+  </div>
+</div>
+
+<script>
+  let hasStarted = false;
+  const consoleEl = document.getElementById('console');
+  const lines = ["INITIALIZING...", "BYPASSING FIREWALL...", "SEARCHING TARGET: POOJA ❤️", "UNLOCKED: 10 REASONS TO LOVE HER.", "ACCESS GRANTED."];
+  let lineIndex = 0;
+
+  // Function to start the whole sequence (triggered by user tap)
+  function startExperience() {
+    if (hasStarted) return;
+    hasStarted = true;
+    
+    // Attempt to play music
+    const music = document.getElementById('bgMusic');
+    music.volume = 0.5;
+    music.play().catch(e => console.log("Audio play failed: " + e));
+
+    document.querySelector('.tap-instruction').style.display = 'none';
+    runHacker();
+  }
+
+  function runHacker() {
+    if(lineIndex < lines.length) {
+      consoleEl.innerHTML += "> " + lines[lineIndex] + "<br>";
+      lineIndex++; 
+      setTimeout(runHacker, 600);
+    } else {
+      setTimeout(() => {
+        document.getElementById('hacker-screen').style.display = 'none';
+        document.getElementById('mainCard').classList.add('visible');
+        createBackground();
+      }, 1000);
+    }
+  }
+
+  function createBackground() {
+    const bg = document.getElementById('bg-elements');
+    const colors = ['#ff69b4', '#ff1493', '#00ffff', '#ffd700'];
+
+    // Background floating text
+    for(let j=0; j<6; j++) {
+      let name = document.createElement('div');
+      name.className = 'floating-name';
+      name.innerHTML = 'Pooja';
+      name.style.left = Math.random() * 80 + '%';
+      name.style.top = Math.random() * 80 + '%';
+      name.style.animationDuration = (20 + Math.random() * 10) + 's';
+      bg.appendChild(name);
+    }
+
+    // Balloons
+    setInterval(() => {
+      let b = document.createElement('div');
+      b.className = 'balloon';
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      b.style.setProperty('--glow-color', color);
+      b.innerHTML = '<span>Pooja</span>';
+      b.style.left = Math.random() * 85 + '%';
+      bg.appendChild(b);
+      setTimeout(() => b.remove(), 15000);
+    }, 2000);
+  }
+
+  function next(id) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.getElementById('s_'+id).classList.add('active');
+  }
+
+  // The "No" button prank logic
+  function moveNo() {
+    const btn = document.getElementById('noBtn');
+    // Constrain to inside the card
+    const x = Math.random() * 200 - 100; // -100 to 100px relative
+    const y = Math.random() * 200 - 100;
+    
+    // We use Fixed positioning for absolute chaos or Transform for smoother local movement
+    // Let's use simple absolute relative to parent container
+    const limitX = 80; // percent
+    const limitY = 80; // percent
+    
+    btn.style.position = 'absolute';
+    btn.style.left = Math.random() * limitX + "%";
+    btn.style.top = Math.random() * limitY + "%";
+  }
+
+  function accept() { 
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ff69b4', '#ffd700', '#fff']
+    }); 
+    next('accepted'); 
+  }
+
+  let candlesBlown = 0;
+  function extinguish(el) {
+    if(el.classList.contains('out')) return;
+    el.classList.add('out');
+    candlesBlown++;
+    if(candlesBlown === 2) {
+      setTimeout(() => {
+        document.getElementById('cake-ui').style.display = 'none';
+        document.getElementById('final-reveal').style.display = 'block';
+        confetti({ particleCount: 100, spread: 60, origin: { y: 0.6 } });
+      }, 500);
+    }
+  }
+
+  function finish() {
+    document.getElementById('mainCard').style.display = 'none';
+    document.getElementById('final-text').style.transform = 'translate(-50%, -50%) scale(1)';
+    
+    // Big finish confetti
+    var duration = 3000;
+    var end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#ff69b4', '#ffd700']
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#ff69b4', '#ffd700']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+  }
+</script>
+</body>
+</html>
